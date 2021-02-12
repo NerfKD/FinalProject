@@ -14,7 +14,7 @@ namespace ConsoleUI
         {
             //DTO - Data Transformation Object
             //IoC
-            //ProductTest();
+            ProductTest();
             //CategoryTest();
 
         }
@@ -35,29 +35,42 @@ namespace ConsoleUI
         {
             ProductManager productManager = new ProductManager(new EfProductDal());
             Console.WriteLine("------------------------getall---------------------");
-            foreach (var product in productManager.GetAll())
+            foreach (var product in productManager.GetAll().Data)
             {
                 Console.WriteLine(product.ProductName);
             }
             Console.WriteLine("------------------------getallcate---------------------");
             //Kategori Id si 1 olanları getir.
-            foreach (var product in productManager.GetAllByCategoryId(2))
+            foreach (var product in productManager.GetAllByCategoryId(2).Data)
             {
                 Console.WriteLine(product.ProductName);
             }
             Console.WriteLine("------------------------getallprice---------------------");
             //UnitPrice en az 50 en fazla 100 olanları getir.
-            foreach (var product in productManager.GetByUnitPrice(10, 20))
+            foreach (var product in productManager.GetByUnitPrice(10, 20).Data)
             {
                 Console.WriteLine(product.ProductName);
             }
 
             Console.WriteLine("------------------------Productdto---------------------");
             //dtodan çekme
-            foreach (var product in productManager.GetProductDetails())
+
+            var result = productManager.GetProductDetails();
+
+            if (result.Success == true)
             {
-                Console.WriteLine(product.ProductName + " / " + product.CategoryName);
+                foreach (var product in result.Data)
+                {
+                    Console.WriteLine(product.ProductName);
+
+                }
+                Console.WriteLine(result.Message);
             }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+
         }
     }
 }
