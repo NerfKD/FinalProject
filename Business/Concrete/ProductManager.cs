@@ -17,11 +17,11 @@ namespace Business.Concrete
         {
             _productDal = productDal;
         }
-
+           
         public IResult Add(Product product)
         {
             //Business codes
-            if (product.ProductName.Length > 2)
+            if (product.ProductName.Length < 2)
             {
                 //magic strings
                 return new ErrorResult(Messages.ProductNameInvalid);
@@ -32,7 +32,12 @@ namespace Business.Concrete
 
         public IDataResult<List<Product>> GetAll()
         {
-            return new SuccessDataResult<List<Product>>(_productDal.GetAll());
+            if (DateTime.Now.Hour == 22)
+            {
+                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+
+            }
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(), Messages.ProductsListed);
         }
 
         public IDataResult<List<Product>> GetAllByCategoryId(int Id)
@@ -52,15 +57,13 @@ namespace Business.Concrete
 
         public IDataResult<List<ProductDetailDto>> GetProductDetails()
         {
-            if (DateTime.Now.Hour == 23)
-            {
-                return new ErrorDataResult<List<ProductDetailDto>>(Messages.MaintenanceTime);
+            //if (DateTime.Now.Hour == 22)
+            //{
+            //    return new ErrorDataResult<List<ProductDetailDto>>(Messages.MaintenanceTime);
                
-            }
-            else
-            {
-                return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails(), Messages.ProductsListed);
-            }
+            //}
+
+            return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails(), Messages.ProductsListed);
         }
     }
 }
