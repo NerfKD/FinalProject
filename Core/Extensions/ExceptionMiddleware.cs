@@ -37,6 +37,7 @@ namespace Core.Extensions
 
             string message = "Internal Server Error";
             IEnumerable<ValidationFailure> errors;
+             
             if (e.GetType() == typeof(ValidationException))
             {
                 message = e.Message;
@@ -54,7 +55,7 @@ namespace Core.Extensions
             return httpContext.Response.WriteAsync(new ErrorDetails
             {
                 StatusCode = httpContext.Response.StatusCode,
-                Message = message
+                Message = e.Message
             }.ToString());
         }
     }
